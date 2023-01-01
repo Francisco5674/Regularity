@@ -5,34 +5,31 @@ h = 0.5;
 c = 1;
 tau = 0.035;
 v = [-1,2,32,-2,-10,9];
-a = zeros(1,I);
-b = ones(1,I);
-k = linspace(0.01,1-tau,I);
+a = gpuArray(zeros(1,I));
+b = gpuArray(ones(1,I));
+k = gpuArray(linspace(0.01,1-tau,I));
 
 %% Testing BS
 sol = BSvector(@(u) f(u,k,h,l,c,tau),a,b);
 
 %% Testing for a grid
-nl = 10;
-nh = 10;
-nc = 100;
-ntau = 100;
-L = linspace(0,1,nl);
-H = linspace(0,1,nh);
-C = linspace(1,10,nc);
-Tau = linspace(0.05,0.95,ntau);
+n = 10;
+L = gpuArray(linspace(0,1,n));
+H = gpuArray(linspace(0,1,n));
+C = gpuArray(linspace(1,10,n));
+Tau = gpuArray(linspace(0.1,0.9,n));
 
 writematrix(["L","H","C","Tau","Problem"],"Info.csv")
 
 countern = 0;
-total = nl*nh*nc*ntau;
+total = n^4;
 
 for l = L
     for h = H
         for c = C
             for tau = Tau
                 if not( l == h) 
-                    k = linspace(0.01,1-tau,I);
+                    k = gpuArray(linspace(0.01,1-tau,I));
                     sol = BSvector(@(u) f(u,k,h,l,c,tau),a,b);
                     % Decreasing behaviour 
                     if prod(diff(sol)<0) == 0
