@@ -28,9 +28,9 @@ C = linspace(1,10,nc);
 Tau = linspace(0.05,0.95,ntau);
 % Note that Tau is always between a number different from zero and
 % different from one because the equations seem to be undefined in those
-% numbers. The limit shows us a problematic behaviour.
+% numbers. The limit shows us a problematic behavior.
 
-% Any weird behaviour or unexpected is reported in a csv file with their
+% Any weird behavior or unexpected is reported in a csv file with their
 % parameters and the nature of the problem called "Info.csv".
 writematrix(["L","H","C","Tau","Problem"],"Info.csv")
 
@@ -46,7 +46,7 @@ for l = L
                 if not( l == h) 
                     k = linspace(0.01,1-tau,I);
                     sol = BSvector(@(u) f(u,k,h,l,c,tau),a,b);
-                    % In case of decreasing behaviour 
+                    % In case of decreasing behavior 
                     if prod(diff(sol)<0) == 0
                         info = [l,h,c,tau,"Non decreasing"];
                         writematrix(info,'Info.csv','WriteMode','append')
