@@ -8,4 +8,4 @@ This repository saves the code which can solve an info design problem based on b
 | {Francisco Fuentes} | {francisco.fuentes@uc.cl} |
 
 ## Execution :computer:
-The main file to execute is "Trabajo.m".
+The main file to execute is "Main.m".

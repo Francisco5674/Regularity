@@ -47,7 +47,7 @@ for l = L
                     k = linspace(0.01,1-tau,I);
                     sol = BSvector(@(u) f(u,k,h,l,c,tau),a,b);
                     % In case of decreasing behavior 
-                    if prod(diff(sol)<0) == 0
+                    if prod(not(diff(sol)>0)) == 0
                         info = [l,h,c,tau,"Non decreasing"];
                         writematrix(info,'Info.csv','WriteMode','append')
                     end
@@ -59,6 +59,67 @@ for l = L
     end
 end
 
+%% Grid space C as a function
+nl = 10;
+% "nl" is the size of the L grid
+nh = 10;
+% "nh" is the size of the H grid
+nc = 10;
+% "nc" is the size of the C grid
+ntau = 10;
+% "ntau" is the size of the Tau grid
+nA = 10;
+% "nA" is the sice of the A grid
+L = linspace(0,1,nl);
+H = linspace(0,1,nh);
+Tau = linspace(0.05,0.95,ntau);
+Alist = linspace(0,10,nA);
+P = [1/3,1/2,2,3];
+% Note that Tau is always between a number different from zero and
+% different from one because the equations seem to be undefined in those
+% numbers. The limit shows us a problematic behavior.
+
+% Any weird behavior or unexpected is reported in a csv file with their
+% parameters and the nature of the problem called "Info.csv".
+writematrix(["L","H","Tau","P","A","Problem"],"Info.csv")
+
+countern = 0;
+total = nl*nh*4*ntau*nA;
+
+for l = L
+    for h = H
+        for p = P
+            for tau = Tau
+                for A = Alist
+                % For some reason, L must be different from H becasue the
+                % equations get undefined 
+                if not( l == h) 
+                    k = linspace(0.01,1-tau,I);
+                    sol = BSvector(@(u) g(u,k,h,l,tau,p,A),a,b);
+                    % In case of decreasing behavior 
+                    if prod(not(diff(sol)>0)) == 0
+                        info = [l,h,tau,p,A,"Non decreasing"];
+                        writematrix(info,'Info.csv','WriteMode','append')
+                    end
+                    countern = countern + 1;
+                    disp(countern*100/total)
+                end
+                end
+            end
+        end
+    end
+end
+%%
+weirdsol = BSvector(@(u) g(u,linspace(0.001,0.95,100), ...
+    0.88889, ...
+    1, ...
+    0.05, ...
+    0.333, ...
+    10),a,b);
+plot(weirdsol)
+
+% Little Tau + Big A, no matter H or L, P<1.
+
 %% Function to test
 
 function y = test(x,c)
@@ -67,6 +128,17 @@ end
 
 %% Function to build 
 
+% C as a function of k
+function y = g(u,k,h,l,tau,p,A)
+y = ((ck(A,p,l,k) - vk(u,k,h,tau)).*vu(u,k,l,tau))-...
+    ((ck(A,p,l,k) - vk(u,k,l,tau)).*vu(u,k,h,tau));
+end
+
+function r = ck(A,p,l,k)
+r = A.*p.*k.^(p-1) + (1-l)*0.5;
+end
+
+% C is constant
 function y = f(u,k,h,l,c,tau)
 y = ((c - vk(u,k,h,tau)).*vu(u,k,l,tau))-...
     ((c - vk(u,k,l,tau)).*vu(u,k,h,tau));
