@@ -1,4 +1,6 @@
 %% Parameters
+clear
+clc
 % This section sets several parameters, this part must be executed before 
 % run the next part which solves the general problem
 I = 100;
@@ -13,14 +15,14 @@ a = zeros(1,I);
 b = ones(1,I);
 k = linspace(0.01,1-tau,I);
 
-%% Grid space
+%% Grid space C as constant
 nl = 10;
 % "nl" is the size of the L grid
 nh = 10;
 % "nh" is the size of the H grid
-nc = 100;
+nc = 10;
 % "nc" is the size of the C grid
-ntau = 100;
+ntau = 10;
 % "ntau" is the size of the Tau grid
 L = linspace(0,1,nl);
 H = linspace(0,1,nh);
@@ -32,10 +34,10 @@ Tau = linspace(0.05,0.95,ntau);
 
 % Any weird behavior or unexpected is reported in a csv file with their
 % parameters and the nature of the problem called "Info.csv".
-writematrix(["L","H","C","Tau","Problem"],"Info.csv")
+writematrix(["L","H","C","Tau","Decreasing"],"Regular_case.csv")
 
 countern = 0;
-total = nl*nh*nc*ntau;
+total = nl*nh*nc*ntau - nl*nc*ntau;
 
 for l = L
     for h = H
@@ -48,8 +50,13 @@ for l = L
                     sol = BSvector(@(u) f(u,k,h,l,c,tau),a,b);
                     % In case of decreasing behavior 
                     if prod(not(diff(sol)>0)) == 0
-                        info = [l,h,c,tau,"Non decreasing"];
-                        writematrix(info,'Info.csv','WriteMode','append')
+                        info = [l,h,c,tau,0];
+                        writematrix(info,'Regular_case.csv', ...
+                            'WriteMode','append')
+                    else
+                        info = [l,h,c,tau,1];
+                        writematrix(info,'Regular_case.csv', ...
+                            'WriteMode','append')
                     end
                     countern = countern + 1;
                     disp(countern*100/total)
@@ -81,10 +88,10 @@ P = [1/3,1/2,2,3];
 
 % Any weird behavior or unexpected is reported in a csv file with their
 % parameters and the nature of the problem called "Info.csv".
-writematrix(["L","H","Tau","P","A","Problem"],"Info.csv")
+writematrix(["L","H","Tau","P","A","Decreasing"],"Unregular_case.csv")
 
 countern = 0;
-total = nl*nh*4*ntau*nA;
+total = nl*nh*4*ntau*nA - nh*4*ntau*nA;
 
 for l = L
     for h = H
@@ -98,8 +105,13 @@ for l = L
                     sol = BSvector(@(u) g(u,k,h,l,tau,p,A),a,b);
                     % In case of decreasing behavior 
                     if prod(not(diff(sol)>0)) == 0
-                        info = [l,h,tau,p,A,"Non decreasing"];
-                        writematrix(info,'Info.csv','WriteMode','append')
+                        info = [l,h,tau,p,A,0];
+                        writematrix(info,'Unregular_case.csv', ...
+                            'WriteMode','append')
+                    else
+                        info = [l,h,tau,p,A,1];
+                        writematrix(info,'Unregular_case.csv', ...
+                            'WriteMode','append')
                     end
                     countern = countern + 1;
                     disp(countern*100/total)
@@ -109,7 +121,7 @@ for l = L
         end
     end
 end
-%%
+%% Example of increasing behavior.
 weirdsol = BSvector(@(u) g(u,linspace(0.001,0.95,100), ...
     0.88889, ...
     1, ...
@@ -119,12 +131,6 @@ weirdsol = BSvector(@(u) g(u,linspace(0.001,0.95,100), ...
 plot(weirdsol)
 
 % Little Tau + Big A, no matter H or L, P<1.
-
-%% Function to test
-
-function y = test(x,c)
-y = (x.^2 - c).*(-1).^(10*c);
-end
 
 %% Function to build 
 
