@@ -10,7 +10,7 @@ This repository saves the code which can solve an info design problem based on b
 ## Execution :computer:
 The main file to execute is "Main.m".
 
-## Principal Inputs
+## Principal Inputs and outputs
 
 ### Regular case (C as a constant)
 | Variable | Description                                  | Size of the vector in the grid |
@@ -30,4 +30,4 @@ The main file to execute is "Main.m".
 
 ### Regular (Regular_case.csv) and Unregular (Unregular_case.csv) outputs
 
-Both cases report their results in a csv file with the parameters behind the behavior. The last column always reports whether the function presents a decreasing (1) or non decreasing (0) behavior.
+Both cases report their results in a csv file with the parameters behind the behavior. The last column always reports 0 when there is at least one non decreasing zone, otherwise, it reports 1.
