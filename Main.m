@@ -37,15 +37,13 @@ Tau = linspace(0.05,0.95,ntau);
 writematrix(["L","H","C","Tau","Decreasing"],"Regular_case.csv")
 
 countern = 0;
-total = nl*nh*nc*ntau - nl*nc*ntau;
+total = (nl*nh*nc*ntau - nl*nc*ntau)/2;
 
 for l = L
     for h = H
         for c = C
             for tau = Tau
-                % For some reason, L must be different from H becasue the
-                % equations get undefined 
-                if not( l == h) 
+                if h>l
                     k = linspace(0.01,1-tau,I);
                     sol = BSvector(@(u) f(u,k,h,l,c,tau),a,b);
                     % In case of decreasing behavior 
@@ -91,16 +89,14 @@ P = [1/3,1/2,2,3];
 writematrix(["L","H","Tau","P","A","Decreasing"],"Unregular_case.csv")
 
 countern = 0;
-total = nl*nh*4*ntau*nA - nh*4*ntau*nA;
+total = (nl*nh*4*ntau*nA - nh*4*ntau*nA)/2;
 
 for l = L
     for h = H
         for p = P
             for tau = Tau
                 for A = Alist
-                % For some reason, L must be different from H becasue the
-                % equations get undefined 
-                if not( l == h) 
+                if h > l 
                     k = linspace(0.01,1-tau,I);
                     sol = BSvector(@(u) g(u,k,h,l,tau,p,A),a,b);
                     % In case of decreasing behavior 
@@ -128,7 +124,10 @@ weirdsol = BSvector(@(u) g(u,linspace(0.001,0.95,100), ...
     0.05, ...
     0.333, ...
     10),a,b);
-plot(weirdsol)
+plot(linspace(0.001,0.95,100),weirdsol)
+title("Example unregular situation")
+xlabel('k') 
+ylabel('Mu') 
 
 % Little Tau + Big A, no matter H or L, P<1.
 
