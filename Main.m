@@ -6,15 +6,9 @@ clc
 I = 100;
 % "I" represents the number of equation the user wants to solve
 % simultaneously, the user can ignore the rest variables.
-l = 0.3;
-h = 0.5;
-c = 1;
-tau = 0.035;
 v = [-1,2,32,-2,-10,9];
 a = zeros(1,I);
 b = ones(1,I);
-k = linspace(0.01,1-tau,I);
-
 %% Grid space C as constant
 nl = 10;
 % "nl" is the size of the L grid
@@ -130,58 +124,3 @@ xlabel('k')
 ylabel('Mu') 
 
 % Little Tau + Big A, no matter H or L, P<1.
-
-%% Function to build 
-
-% C as a function of k
-function y = g(u,k,h,l,tau,p,A)
-y = ((ck(A,p,l,k) - vk(u,k,h,tau)).*vu(u,k,l,tau))-...
-    ((ck(A,p,l,k) - vk(u,k,l,tau)).*vu(u,k,h,tau));
-end
-
-function r = ck(A,p,l,k)
-r = A.*p.*k.^(p-1) + (1-l)*0.5;
-end
-
-% C is constant
-function y = f(u,k,h,l,c,tau)
-y = ((c - vk(u,k,h,tau)).*vu(u,k,l,tau))-...
-    ((c - vk(u,k,l,tau)).*vu(u,k,h,tau));
-end
-
-function y = vu(u,k,theta,tau)
-y = R(k,theta,tau).*upu(u,k,tau) + (1-R(k,theta,tau)).*ufu(u,k,tau);
-end
-
-function y = vk(u,k,theta,tau)
-y = -(1-theta).*(up(u,k,tau)-uf(u,k,tau)) ... 
-    + R(k,theta,tau).*upk(u,k,tau) + (1-R(k,theta,tau)).*ufk(u,k,tau);
-end
-
-function y = upu(u,k,tau)
-y = (1-tau).*(1-tau-k)./(((1-tau)*u+(1-u).*(1-tau-k)).^2);
-end
-
-function y = upk(u,k,tau)
-y = u.*(1-tau).*(1-u)./(((1-tau)*u+(1-u).*(1-tau-k)).^2);
-end
-
-function y = ufu(u,k,tau)
-y = tau.*(tau+k)./((tau*u+(1-u).*(tau+k)).^2);
-end
-
-function y = ufk(u,k,tau)
-y = -tau.*u.*(1-u)./((tau*u+(1-u).*(tau+k)).^2);
-end
-
-function y = R(k,theta,tau)
-y = (1-tau-(1-theta).*k);
-end
-
-function y = up(u,k,tau)
-y = u.*(1-tau)./((1-tau)*u+(1-u).*(1-tau-k));
-end
-
-function y = uf(u,k,tau)
-y = tau.*u./(tau*u+(1-u).*(tau+k));
-end

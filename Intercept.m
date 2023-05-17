@@ -6,11 +6,6 @@ clc
 I = 1001;
 % "I" represents the number of equation the user wants to solve
 % simultaneously, the user can ignore the rest variables.
-l = 0.3;
-h = 0.5;
-c = 1;
-tau = 0.035;
-v = [-1,2,32,-2,-10,9];
 a = zeros(1,I - 1);
 b = ones(1,I - 1);
 
@@ -19,13 +14,13 @@ nl = 10;
 % "nl" is the size of the L grid
 nh = 10;
 % "nh" is the size of the H grid
-nc = 10;
+nc = 100;
 % "nc" is the size of the C grid
 ntau = 10;
 % "ntau" is the size of the Tau grid
 L = linspace(0,1,nl);
 H = linspace(0,1,nh);
-C = linspace(1,10,nc);
+C = linspace(1,100,nc);
 Tau = linspace(0.05,0.95,ntau);
 % Note that Tau is always between a number different from zero and
 % different from one because the equations seem to be undefined in those
@@ -33,8 +28,8 @@ Tau = linspace(0.05,0.95,ntau);
 
 % Any weird behavior or unexpected is reported in a csv file with their
 % parameters and the nature of the problem called "Info.csv".
-writematrix(["L","H","C","Tau","Intercept_mu", "Intercept_k"],...
-    "Regular_intercept.csv")
+writematrix(["L","H","C","Tau","Intercept_mu", "Intercept_k",...
+    "H_bigger_Int","Intercept?"],"Regular_intercept.csv")
 
 countern = 0;
 total = (nl*nh*nc*ntau - nl*nc*ntau)/2;
@@ -44,7 +39,7 @@ for l = L
         for c = C
             for tau = Tau
                 if h>l
-                    k = linspace(0.01,1-tau,I);
+                    k = linspace(0.001,1-tau,I);
                     k = k(1:I-1);
                     % mu which marks the difference between the IC slope of
                     % high type and the low type
@@ -61,11 +56,22 @@ for l = L
 
                     % looking for intercept
                     [intercept, ind] = min(abs(Line_D - Line_L));
+                    if h < Line_L(I-1)
                     
-                    if Line_L(I-1) > Line_D(I-1)
-                        info = [l,h,c,tau,intercept,k(ind)];
+                        if Line_L(I-1) > Line_D(I-1)
+                            mu_int = (Line_L(ind) + Line_D(ind))/2;
+                            if h>=mu_int
+                                info = [l,h,c,tau,mu_int,k(ind),1,1];
+                            else
+                                info = [l,h,c,tau,mu_int,k(ind),0,1];
+                            end
+                            
+                        else
+                            info = [l,h,c,tau,".",".",".",0];
+                        end
+                        % write each record of the parameters in the csv
                         writematrix(info,'Regular_intercept.csv', ...
-                                'WriteMode','append')
+                                    'WriteMode','append')
                     end
                     
                     % This element displays the progress of the program
@@ -81,9 +87,9 @@ end
 %% Example
 
 tau_ex=0.05;
-c_ex=10;
-h_ex=0.222;
-l_ex=0.111;
+c_ex=50;
+h_ex=0.333;
+l_ex=0.222;
 
 dom = linspace(0.001,1-tau_ex,I);
 dom = dom(1:I-1);
@@ -93,81 +99,63 @@ L = BSvector(@(u) f(u,dom, ...
     c_ex, ...
     tau_ex),a,b);
 
-[dom,diver,a,b,udiver] = precheck(@(u) lic(u,dom,l_ex,c_ex,tau_ex),a,b,dom);
+[dom,diver,ar,br,udiver] = ...
+    precheck(@(u) lic(u,dom,l_ex,c_ex,tau_ex),a,b,dom);
 
 D = BSvector(@(u) lic(u,dom, ...
     l_ex, ...
     c_ex, ...
-    tau_ex),a,b);
+    tau_ex),ar,br);
 
 dom = [dom, diver];
 D = [D, udiver];
 
 [intercept, ind] = min(abs(D - L));
-disp(dom(ind))
 
 plot(dom,L,dom,D)
 title("Example")
 xlabel('k') 
 ylabel('Mu') 
 
-%% Function to build 
+%% Statistics
+clear;
+% Tau and when do the lines intercept each other?
+regular_intercept = readtable("Regular_intercept.csv");
+tabulate(regular_intercept.("Intercept_"));
+heatmap(regular_intercept,"Tau","Intercept_");
 
-% Low indifference curve
+%% H vs Mu intercept by H
+filter = ~isnan(table2array(regular_intercept(:,"H_bigger_Int")));
+heatmap(regular_intercept(filter,:),"H","H_bigger_Int");
+title("When is H bigger than the intercept?")
+xlabel('H') 
+ylabel('H > intercept?') 
 
-function y = lic(u,k,l,c,tau)
-y = R(k,l,tau).*(up(u,k,tau) - uf(u,k,tau)) + uf(u,k,tau) - c*k - l;
-end
+%% H vs Mu intercept by L
+filter = ~isnan(table2array(regular_intercept(:,"H_bigger_Int")));
+heatmap(regular_intercept(filter,:),"L","H_bigger_Int");
+title("When is H bigger than the intercept?")
+xlabel('L')     
+ylabel('H > intercept?') 
 
-% C as a function of k
-function y = g(u,k,h,l,tau,p,A)
-y = ((ck(A,p,l,k) - vk(u,k,h,tau)).*vu(u,k,l,tau))-...
-    ((ck(A,p,l,k) - vk(u,k,l,tau)).*vu(u,k,h,tau));
-end
+%% H vs Mu intercept by C
+filter = ~isnan(table2array(regular_intercept(:,"H_bigger_Int")));
+heatmap(regular_intercept(filter,:),"C","H_bigger_Int");
+title("When is H bigger than the intercept?")
+xlabel('C')     
+ylabel('H > intercept?') ;
 
-function r = ck(A,p,l,k)
-r = A.*p.*k.^(p-1) + (1-l)*0.5;
-end
+%% H comparative static first impression
+filter = ~isnan(table2array(regular_intercept(:,"H_bigger_Int")));
+regular_inter_mat = table2array(regular_intercept(filter,:));
+regular_inter_mat = [regular_inter_mat, disc(regular_inter_mat(:,5))'];
 
-% C is constant
-function y = f(u,k,h,l,c,tau)
-y = ((c - vk(u,k,h,tau)).*vu(u,k,l,tau))-...
-    ((c - vk(u,k,l,tau)).*vu(u,k,h,tau));
-end
+filtered_intercepts = array2table(regular_inter_mat);
+heatmap(filtered_intercepts,"regular_inter_mat2","regular_inter_mat9");
+title("H comparative statics")
+xlabel('H')     
+ylabel('mu intercept') ;
 
-function y = vu(u,k,theta,tau)
-y = R(k,theta,tau).*upu(u,k,tau) + (1-R(k,theta,tau)).*ufu(u,k,tau);
-end
 
-function y = vk(u,k,theta,tau)
-y = -(1-theta).*(up(u,k,tau)-uf(u,k,tau)) ... 
-    + R(k,theta,tau).*upk(u,k,tau) + (1-R(k,theta,tau)).*ufk(u,k,tau);
-end
 
-function y = upu(u,k,tau)
-y = (1-tau).*(1-tau-k)./(((1-tau)*u+(1-u).*(1-tau-k)).^2);
-end
 
-function y = upk(u,k,tau)
-y = u.*(1-tau).*(1-u)./(((1-tau)*u+(1-u).*(1-tau-k)).^2);
-end
-
-function y = ufu(u,k,tau)
-y = tau.*(tau+k)./((tau*u+(1-u).*(tau+k)).^2);
-end
-
-function y = ufk(u,k,tau)
-y = -tau.*u.*(1-u)./((tau*u+(1-u).*(tau+k)).^2);
-end
-
-function y = R(k,theta,tau)
-y = (1-tau-(1-theta).*k);
-end
-
-function y = up(u,k,tau)
-y = u.*(1-tau)./((1-tau)*u+(1-u).*(1-tau-k));
-end
-
-function y = uf(u,k,tau)
-y = tau.*u./(tau*u+(1-u).*(tau+k));
-end
