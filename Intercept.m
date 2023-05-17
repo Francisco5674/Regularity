@@ -10,9 +10,9 @@ a = zeros(1,I - 1);
 b = ones(1,I - 1);
 
 %% Grid space C as constant
-nl = 10;
+nl = 11;
 % "nl" is the size of the L grid
-nh = 10;
+nh = 11;
 % "nh" is the size of the H grid
 nc = 100;
 % "nc" is the size of the C grid
