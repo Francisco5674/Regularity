@@ -39,6 +39,3 @@ with open("Stat_C.csv", mode= "w", encoding= "utf-8") as file:
     data = [str(j) for j in data]
     file.write((",").join(data) + "\n")
 
-
-
-

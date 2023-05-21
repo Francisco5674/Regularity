@@ -10,16 +10,14 @@ a = zeros(1,I - 1);
 b = ones(1,I - 1);
 
 %% Grid space C as constant
-nl = 11;
+nl = 8;
 % "nl" is the size of the L grid
-nh = 11;
-% "nh" is the size of the H grid
 nc = 100;
 % "nc" is the size of the C grid
 ntau = 10;
 % "ntau" is the size of the Tau grid
-L = linspace(0,1,nl);
-H = linspace(0,1,nh);
+L = linspace(0,0.7,nl);
+h = 0.8;
 C = linspace(1,100,nc);
 Tau = linspace(0.05,0.95,ntau);
 % Note that Tau is always between a number different from zero and
@@ -32,10 +30,9 @@ writematrix(["L","H","C","Tau","Intercept_mu", "Intercept_k",...
     "H_bigger_Int","Intercept?"],"Regular_intercept.csv")
 
 countern = 0;
-total = (nl*nh*nc*ntau - nl*nc*ntau)/2;
+total = nl*nc*ntau;
 
 for l = L
-    for h = H
         for c = C
             for tau = Tau
                 if h>l
@@ -81,15 +78,14 @@ for l = L
                 end
             end
         end
-    end
 end
 
 %% Example
 
-tau_ex=0.05;
-c_ex=50;
-h_ex=0.333;
-l_ex=0.222;
+tau_ex=0.75;
+c_ex=1;
+h_ex=1;
+l_ex=0.6;
 
 dom = linspace(0.001,1-tau_ex,I);
 dom = dom(1:I-1);
@@ -112,12 +108,12 @@ D = [D, udiver];
 
 [intercept, ind] = min(abs(D - L));
 
-plot(dom,L,dom,D)
+plot(dom,L, dom, D)
 title("Example")
 xlabel('k') 
 ylabel('Mu') 
 
-%% Statistics
+%% Comparative Statistics
 clear;
 % Tau and when do the lines intercept each other?
 regular_intercept = readtable("Regular_intercept.csv");
@@ -145,17 +141,24 @@ title("When is H bigger than the intercept?")
 xlabel('C')     
 ylabel('H > intercept?') ;
 
-%% H comparative static first impression
-filter = ~isnan(table2array(regular_intercept(:,"H_bigger_Int")));
-regular_inter_mat = table2array(regular_intercept(filter,:));
-regular_inter_mat = [regular_inter_mat, disc(regular_inter_mat(:,5))'];
+%% Graphs of mu intercept by c
+l = 0.3;
+tau = 0.65;
 
-filtered_intercepts = array2table(regular_inter_mat);
-heatmap(filtered_intercepts,"regular_inter_mat2","regular_inter_mat9");
-title("H comparative statics")
-xlabel('H')     
-ylabel('mu intercept') ;
+comp_stat_c = readmatrix("Stat_C.csv");
+filter = (comp_stat_c(:,1) == l) & (comp_stat_c(:,3) == tau);
+comp_stat_c = comp_stat_c(filter,:);
+muintercept = comp_stat_c(4:end);
 
+plot(muintercept)
 
+%% Graphs of mu intercept by L
+c = 30;
+tau = 0.75;
 
+comp_stat_c = readmatrix("Stat_L.csv");
+filter = (comp_stat_c(:,2) == c) & (comp_stat_c(:,3) == tau);
+comp_stat_c = comp_stat_c(filter,:);
+muintercept = comp_stat_c(4:end);
 
+plot(muintercept)
