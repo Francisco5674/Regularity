@@ -13,14 +13,12 @@ b = ones(1,I);
 %% Grid space C as constant
 nl = 10;
 % "nl" is the size of the L grid
-nh = 10;
-% "nh" is the size of the H grid
 nc = 10;
 % "nc" is the size of the C grid
 ntau = 10;
 % "ntau" is the size of the Tau grid
-L = linspace(0,1,nl);
-H = linspace(0,1,nh);
+h = 0.8;
+L = linspace(0,h,nl);
 C = linspace(1,10,nc);
 Tau = linspace(0.05,0.95,ntau);
 % Note that Tau is always between a number different from zero and
@@ -34,10 +32,9 @@ Tau = linspace(0.05,0.95,ntau);
 writematrix(["L","H","C","Tau","Decreasing"],"Regular_case.csv")
 
 countern = 0;
-total = (nl*nh*nc*ntau - nl*nc*ntau)/2;
+total = nl*nc*ntau;
 
 for l = L
-    for h = H
         for c = C
             for tau = Tau
                 if h>l
@@ -58,7 +55,6 @@ for l = L
                 end
             end
         end
-    end
 end
 
 %% Grid space C as a function
