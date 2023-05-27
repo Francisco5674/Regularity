@@ -10,34 +10,11 @@ This repository saves the code which can solve an info design problem based on b
 ## Execution :computer:
 There are three relevant files to run.
 
-| "Check_decreasing.m" | "Check_intercept.m" |"Comparative_stats.m" |
-| :-: | :-: | :-: |
-| This check if the $\mu$ which marks the difference between the Indiference curve (IC) slope of high type and the low type is decreasing in $\kappa$. | This file looks for the intercept of the line found in "Check_decreasing.m" and the IC of the low type. | The main objective of this script is to build the vectors of $\mu$ founded in "Check_intercept.m" as a function of "C" or "L". |
+|"Check_intercept.m"|"Comparative_stats.m"|
+| :-: | :-: |
+| This check if the $\mu$ which marks the difference between the Indiference curve (IC) slope of high type and the low type is decreasing in $\kappa$. This file looks for the intercept of the line found in "Check_decreasing.m" and the IC of the low type. | The main objective of this script is to build the vectors of $\mu$ founded in "Check_intercept.m" as a function of "C" or "L". |
 
 # Principal Inputs and outputs
-
-## Check_decreasing.m
-#### Regular case (C as a constant)
-| Variable | Description                                  | Size of the vector in the grid |
-|----------|----------------------------------------------|--------------------------------|
-| L        | Vector of l components in [0,H)              |               nl               |
-| H        | 0.8 by default              |               :no_entry_sign:              |
-| C        | Vector of c components in [2,20), big enough |               nc               |
-| Tau      | Vector of tau components in (0,1)            |              ntau              |
-| I      | Number of equations to be solved ($\mu$ and $\kappa$ grid size)           |    :no_entry_sign:                       |             |
-#### Unregular case (C as funtion of k)
-| Variable | Description                                                                                  | Size of the vector in the grid |
-|----------|----------------------------------------------------------------------------------------------|--------------------------------|
-| L        | Vector of l components in [0,H)                                                              |               nl               |
-| H        | 0.8 by default                                                             |              :no_entry_sign:                 |
-| A        | Vector of A components in [1,10]. This is the  equivalent of "a" in the functional form of C |               nA               |
-| Tau      | Vector of tau components in (0,1)                                                            |              ntau              |
-| P        | Vector of p components                                                                       |         :no_entry_sign:        |
- I      | Number of equations to be solved ($\mu$ and $\kappa$ grid size)           |    :no_entry_sign:                       |             |
-
-### Regular (Regular_case.csv) and Unregular (Unregular_case.csv) outputs
-
-Both cases report their results in a csv file with the parameters behind the behavior. The last column always reports 0 when there is at least one non decreasing zone, otherwise, it reports 1.
 
 ## Check_intercept.m
 ### Inputs

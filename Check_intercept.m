@@ -1,4 +1,4 @@
- %% Parameters
+%% Parameters
 clear
 clc
 % This section sets several parameters, this part must be executed before 
@@ -21,12 +21,13 @@ C = linspace(2,20,nc);
 Tau = linspace(0.05,0.95,ntau);
 % Note that Tau is neither zero nor one.
 
-% All the results will be saved in "Regular_intercept.csv".
+% All the results will be saved in "Regular_intercept.csv" and 
+% "Regular_decreasing.csv".
 %%
-
 writematrix(["L","H","C","Tau","Intercept_mu", "Intercept_k",...
     "H_bigger_Int","Intercept?"],"Regular_intercept.csv")
-
+writematrix(["L","H","C","Tau","Decreasing"],"Regular_case.csv")
+ 
 countern = 0;
 total = nl*nc*ntau;
 
@@ -38,6 +39,16 @@ for l = L
                     k = k(1:I-1);
                     % Line_D = mu tilde of kappa
                     Line_D = BSvector(@(u) f(u,k,h,l,c,tau),a,b);
+
+                    if prod(not(diff(Line_D)>0)) == 0
+                        info = [l,h,c,tau,0];
+                        writematrix(info,'Regular_case.csv', ...
+                            'WriteMode','append')
+                    else
+                        info = [l,h,c,tau,1];
+                        writematrix(info,'Regular_case.csv', ...
+                            'WriteMode','append')
+                    end
                    
                     [kc,diver,ac,bc,udiver] = ...
                         precheck(@(u) lic(u,k,l,c,tau),a,b,k);
