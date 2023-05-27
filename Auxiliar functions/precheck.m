@@ -9,12 +9,12 @@ diver = [];
 aconv = [];
 bconv = [];
 soldiver = [];
-% if any value of f() has constant sign between a and b, then the bisection 
-% algorithm is useless
+% if any value of f() has a constant sign between a and b, 
+% then the bisection algorithm is useless
 for i=1:size(k,2)
 
-    % This loop is in charge to discriminate such cases and make the 
-    % bisection algorithm useful again
+    % This loop checks for these cases, and makes the algortihm useful
+    % again
 
     if fact(i) == 1
         conv = [conv, k(i)];

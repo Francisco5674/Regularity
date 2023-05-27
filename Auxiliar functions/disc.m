@@ -1,5 +1,5 @@
 function [mudisc] = disc(mu)
-% this function discretize a vectir between 0 and 1
+% this function discretizes a vector between 0 and 1
 mudisc = [];
 
 for i = 1:length(mu)

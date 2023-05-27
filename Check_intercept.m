@@ -2,14 +2,13 @@
 clear
 clc
 % This section sets several parameters, this part must be executed before 
-% run the next part which solves the general problem
+% running the next part which solves the general problem
 I = 1001;
-% "I" represents the number of equation the user wants to solve
-% simultaneously. (Number of k and mu)
+% "I" = grid size of kappa.
 a = zeros(1,I - 1);
 b = ones(1,I - 1);
 
-%% Grid space (C as constant)
+%% Grid space for parameters
 nl = 8;
 % "nl" is the size of the L grid
 nc = 10;
@@ -20,12 +19,11 @@ L = linspace(0,0.7,nl);
 h = 0.8; % h is not relevant since it only represents an upper bound for L.
 C = linspace(2,20,nc);
 Tau = linspace(0.05,0.95,ntau);
-% Note that Tau is always between a number different from zero and
-% different from one because the equations seem to be undefined in those
-% numbers.
+% Note that Tau is neither zero nor one.
 
 % All the results will be saved in "Regular_intercept.csv".
 %%
+
 writematrix(["L","H","C","Tau","Intercept_mu", "Intercept_k",...
     "H_bigger_Int","Intercept?"],"Regular_intercept.csv")
 
@@ -38,20 +36,18 @@ for l = L
                 if h>l
                     k = linspace(0.001,1-tau,I);
                     k = k(1:I-1);
-                    % mu which marks the difference between the IC slope of
-                    % high type and the low type
+                    % Line_D = mu tilde of kappa
                     Line_D = BSvector(@(u) f(u,k,h,l,c,tau),a,b);
-                    
-                    % Checking the valid points and the problematics for
-                    % the low type IC
+                   
                     [kc,diver,ac,bc,udiver] = ...
                         precheck(@(u) lic(u,k,l,c,tau),a,b,k);
+                    %Line_L = Indifference curve of type L
                     Line_L = BSvector(@(u) lic(u,kc,l,c,tau),ac,bc);
 
                     k = [kc, diver];
                     Line_L = [Line_L, udiver];
 
-                    % looking for intercept
+                    % find the intercept, hat_mu
                     [intercept, ind] = min(abs(Line_D - Line_L));
                     if h < Line_L(I-1)
                     
@@ -66,7 +62,7 @@ for l = L
                         else
                             info = [l,h,c,tau,".",".",".",0];
                         end
-                        % write each record of the parameters in the csv
+                        % write in the csv
                         writematrix(info,'Regular_intercept.csv', ...
                                     'WriteMode','append')
                     end
@@ -80,41 +76,7 @@ for l = L
         end
 end
 
-% This creates the files where python filters by the selected variables.
-pyrunfile("Comparative_C.py") % Mu(C)
-pyrunfile("Comparative_L.py") % Mu(L)
-
-
-%% Example
-
-tau_ex=0.75;
-c_ex=90;
-h_ex=0.8;
-l_ex=0.3;
-
-
-dom = linspace(0.001,1-tau_ex,I);
-dom = dom(1:I-1);
-L = BSvector(@(u) f(u,dom, ...
-    h_ex, ...
-    l_ex, ...
-    c_ex, ...
-    tau_ex),a,b);
-
-[dom,diver,ar,br,udiver] = ...
-    precheck(@(u) lic(u,dom,l_ex,c_ex,tau_ex),a,b,dom);
-
-D = BSvector(@(u) lic(u,dom, ...
-    l_ex, ...
-    c_ex, ...
-    tau_ex),ar,br);
-
-dom = [dom, diver];
-D = [D, udiver];
-
-[intercept, ind] = min(abs(D - L));
-
-plot(dom,L, dom, D)
-title("Example")
-xlabel('k') 
-ylabel('Mu') 
+% This creates the files in python for the comparative statics.
+% Writes hat_mu as a function of C or L.
+pyrunfile("Comparative_C.py") % hat_mu(C) 
+pyrunfile("Comparative_L.py") % hat_mu(L)
