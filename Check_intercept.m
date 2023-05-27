@@ -5,27 +5,27 @@ clc
 % run the next part which solves the general problem
 I = 1001;
 % "I" represents the number of equation the user wants to solve
-% simultaneously, the user can ignore the rest variables.
+% simultaneously. (Number of k and mu)
 a = zeros(1,I - 1);
 b = ones(1,I - 1);
 
-%% Grid space C as constant
+%% Grid space (C as constant)
 nl = 8;
 % "nl" is the size of the L grid
-nc = 100;
+nc = 10;
 % "nc" is the size of the C grid
 ntau = 10;
 % "ntau" is the size of the Tau grid
 L = linspace(0,0.7,nl);
-h = 0.8;
-C = linspace(1,100,nc);
+h = 0.8; % h is not relevant since it only represents an upper bound for L.
+C = linspace(2,20,nc);
 Tau = linspace(0.05,0.95,ntau);
 % Note that Tau is always between a number different from zero and
 % different from one because the equations seem to be undefined in those
-% numbers. The limit shows us a problematic behavior.
+% numbers.
 
-% Any weird behavior or unexpected is reported in a csv file with their
-% parameters and the nature of the problem called "Info.csv".
+% All the results will be saved in "Regular_intercept.csv".
+%%
 writematrix(["L","H","C","Tau","Intercept_mu", "Intercept_k",...
     "H_bigger_Int","Intercept?"],"Regular_intercept.csv")
 
@@ -80,12 +80,18 @@ for l = L
         end
 end
 
+% This creates the files where python filters by the selected variables.
+pyrunfile("Comparative_C.py") % Mu(C)
+pyrunfile("Comparative_L.py") % Mu(L)
+
+
 %% Example
 
 tau_ex=0.75;
-c_ex=1;
-h_ex=1;
-l_ex=0.6;
+c_ex=90;
+h_ex=0.8;
+l_ex=0.3;
+
 
 dom = linspace(0.001,1-tau_ex,I);
 dom = dom(1:I-1);
@@ -112,53 +118,3 @@ plot(dom,L, dom, D)
 title("Example")
 xlabel('k') 
 ylabel('Mu') 
-
-%% Comparative Statistics
-clear;
-% Tau and when do the lines intercept each other?
-regular_intercept = readtable("Regular_intercept.csv");
-tabulate(regular_intercept.("Intercept_"));
-heatmap(regular_intercept,"Tau","Intercept_");
-
-%% H vs Mu intercept by H
-filter = ~isnan(table2array(regular_intercept(:,"H_bigger_Int")));
-heatmap(regular_intercept(filter,:),"H","H_bigger_Int");
-title("When is H bigger than the intercept?")
-xlabel('H') 
-ylabel('H > intercept?') 
-
-%% H vs Mu intercept by L
-filter = ~isnan(table2array(regular_intercept(:,"H_bigger_Int")));
-heatmap(regular_intercept(filter,:),"L","H_bigger_Int");
-title("When is H bigger than the intercept?")
-xlabel('L')     
-ylabel('H > intercept?') 
-
-%% H vs Mu intercept by C
-filter = ~isnan(table2array(regular_intercept(:,"H_bigger_Int")));
-heatmap(regular_intercept(filter,:),"C","H_bigger_Int");
-title("When is H bigger than the intercept?")
-xlabel('C')     
-ylabel('H > intercept?') ;
-
-%% Graphs of mu intercept by c
-l = 0.3;
-tau = 0.65;
-
-comp_stat_c = readmatrix("Stat_C.csv");
-filter = (comp_stat_c(:,1) == l) & (comp_stat_c(:,3) == tau);
-comp_stat_c = comp_stat_c(filter,:);
-muintercept = comp_stat_c(4:end);
-
-plot(muintercept)
-
-%% Graphs of mu intercept by L
-c = 30;
-tau = 0.75;
-
-comp_stat_c = readmatrix("Stat_L.csv");
-filter = (comp_stat_c(:,2) == c) & (comp_stat_c(:,3) == tau);
-comp_stat_c = comp_stat_c(filter,:);
-muintercept = comp_stat_c(4:end);
-
-plot(muintercept)

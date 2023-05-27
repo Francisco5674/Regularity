@@ -31,7 +31,7 @@ for id in Record.keys():
   Record[id] = sorted(Record[id], key = lambda x: x[0])
   print(id)
 
-with open("Stat_L.csv", mode= "w", encoding= "utf-8") as file:
+with open("Auxiliar CSV/Stat_L.csv", mode= "w", encoding= "utf-8") as file:
   for id in Record.keys():
     muintercept = [i[1] for i in Record[id]]
     parameters = Codes[id]

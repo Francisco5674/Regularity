@@ -9,6 +9,7 @@ I = 100;
 v = [-1,2,32,-2,-10,9];
 a = zeros(1,I);
 b = ones(1,I);
+
 %% Grid space C as constant
 nl = 10;
 % "nl" is the size of the L grid
@@ -28,6 +29,8 @@ Tau = linspace(0.05,0.95,ntau);
 
 % Any weird behavior or unexpected is reported in a csv file with their
 % parameters and the nature of the problem called "Info.csv".
+
+%%
 writematrix(["L","H","C","Tau","Decreasing"],"Regular_case.csv")
 
 countern = 0;
