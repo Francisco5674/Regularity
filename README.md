@@ -8,7 +8,7 @@ This repository saves the code which can solve an info design problem based on b
 | {Francisco Fuentes} | {francisco.fuentes@uc.cl} |
 
 ## Execution :computer:
-There are two relevant files to run.
+There are three relevant files to run.
 
 | "Check_decreasing.m" | "Check_intercept.m" |"Comparative_stats.m" |
 | :-: | :-: | :-: |
@@ -20,18 +20,20 @@ There are two relevant files to run.
 #### Regular case (C as a constant)
 | Variable | Description                                  | Size of the vector in the grid |
 |----------|----------------------------------------------|--------------------------------|
-| L        | Vector of l components in [0,1]              |               nl               |
-| H        | Vector of h components in [0,1]              |               nh               |
-| C        | Vector of c components in [1,10], big enough |               nc               |
+| L        | Vector of l components in [0,H)              |               nl               |
+| H        | 0.8 by default              |               :no_entry_sign:              |
+| C        | Vector of c components in [2,20), big enough |               nc               |
 | Tau      | Vector of tau components in (0,1)            |              ntau              |
+| I      | Number of equations to be solved ($\mu$ and $\kappa$ grid size)           |    :no_entry_sign:                       |             |
 #### Unregular case (C as funtion of k)
 | Variable | Description                                                                                  | Size of the vector in the grid |
 |----------|----------------------------------------------------------------------------------------------|--------------------------------|
-| L        | Vector of l components in [0,1]                                                              |               nl               |
-| H        | Vector of h components in [0,1]                                                              |               nh               |
+| L        | Vector of l components in [0,H)                                                              |               nl               |
+| H        | 0.8 by default                                                             |              :no_entry_sign:                 |
 | A        | Vector of A components in [1,10]. This is the  equivalent of "a" in the functional form of C |               nA               |
 | Tau      | Vector of tau components in (0,1)                                                            |              ntau              |
 | P        | Vector of p components                                                                       |         :no_entry_sign:        |
+ I      | Number of equations to be solved ($\mu$ and $\kappa$ grid size)           |    :no_entry_sign:                       |             |
 
 ### Regular (Regular_case.csv) and Unregular (Unregular_case.csv) outputs
 
@@ -41,8 +43,23 @@ Both cases report their results in a csv file with the parameters behind the beh
 ### Inputs
 | Variable | Description                                  | Size of the vector in the grid |
 |----------|----------------------------------------------|--------------------------------|
-| L        | Vector of l components in [0,1]              |               nl               |
+| L        | Vector of l components in [0,H)              |               nl               |
 | H        | 0.8 by default              |               :no_entry_sign:              |
-| C        | Vector of c components in [1,10], big enough |               nc               |
+| C        | Vector of c components in [2,20] |               nc               |
 | Tau      | Vector of tau components in (0,1)            |              ntau              |
+| I      | Number of equations to be solved ($\mu$ and $\kappa$ grid size)           |    :no_entry_sign:                       |
 
+### Output
+The file "Regular_intercept.csv" is the main output, it has all the possible combinations of parameters and their respective interception $\mu$ and $\kappa$. Moreover, it is included two additional dummy variables:
+
+| H_bigger_Int | Intercept |
+| :-: | :-: |
+| 1 if and only if h is bigger than Intercept_Mu | 1 if and only if there is interception |
+
+There are two auxiliar outputs which filter "Regular_intercept.csv" by "L" ("Stat_L.csv") or "C"("Stat_C.csv") to study comparative statics.
+
+## Check_intercept.m
+### Inputs
+This file has no inputs, the only relevant inputs are the outputs of "Check_intercept.m".
+### Outputs
+Results in a csv file called "Comp_C.csv" or "Comp_L.csv" with the parameters behind the respective behavior. The last column always reports 0 when there is at least one non increasing zone, otherwise, it reports 1.
