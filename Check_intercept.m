@@ -4,7 +4,7 @@ clc
 % This section sets several parameters, this part must be executed before 
 % running the next part which solves the general problem
 I = 1001;
-% "I" = grid size of kappa.
+% "I" = grid size of kappa
 a = zeros(1,I - 1);
 b = ones(1,I - 1);
 
@@ -24,10 +24,10 @@ Tau = linspace(0.05,0.95,ntau);
 % All the results will be saved in "Regular_intercept.csv" and 
 % "Regular_decreasing.csv".
 %%
-writematrix(["L","H","C","Tau","Intercept_mu", "Intercept_k",...
-    "H_bigger_Int","Intercept?"],"Regular_intercept.csv")
+writematrix(["L","H","C","Tau","hat_mu", "hat_kappa",...
+    "Intercept"],"Regular_intercept.csv")
 writematrix(["L","H","C","Tau","Decreasing"],"Regular_case.csv")
- 
+
 countern = 0;
 total = nl*nc*ntau;
 
@@ -64,14 +64,9 @@ for l = L
                     
                         if Line_L(I-1) > Line_D(I-1)
                             mu_int = (Line_L(ind) + Line_D(ind))/2;
-                            if h>=mu_int
-                                info = [l,h,c,tau,mu_int,k(ind),1,1];
-                            else
-                                info = [l,h,c,tau,mu_int,k(ind),0,1];
-                            end
-                            
+                            info = [l,h,c,tau,mu_int,k(ind),1];
                         else
-                            info = [l,h,c,tau,".",".",".",0];
+                            info = [l,h,c,tau,".",".",0];
                         end
                         % write in the csv
                         writematrix(info,'Regular_intercept.csv', ...

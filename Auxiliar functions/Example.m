@@ -1,9 +1,9 @@
 %% Example
 
-tau_ex=0.75;
-c_ex=90;
+tau_ex=0.95;
+c_ex=2;
 h_ex=0.8;
-l_ex=0.3;
+l_ex=0.7;
 
 
 dom = linspace(0.001,1-tau_ex,I);
