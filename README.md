@@ -17,17 +17,13 @@ The market (receiver) observes the firm’s choice of test expertise and result.
 #### Beliefs and payoffs
 
 We denote by $z ∶= \mathbb{P}(\theta = H)$ beliefs about firm’s type being high and $\mu ∶= \mathbb{P}(v = 1) = zH + (1 − z) L$ beliefs about product quality being good. Prior beliefs are given by $z_0 \in [0, 1]$ and $\mu_0 \in [L, H]$, respectively. After observing expertise $\kappa$, the market forms interim beliefs $z(\kappa) ∶= \mathbb{P}(\theta = H|\kappa)$ and $\mu(\kappa) = \mathbb{P} (v = 1|\kappa) = z(\kappa)H + (1 − z(\kappa))L$. From now on we write interim beliefs $\mu(\kappa)$ as $\mu$ to save notation. Given $\mu$, posteriors are calculated via Bayes rule after observing the result $d$:
-$$
-\lambda(\mu, \kappa) = \frac{\mu Q_{d|1}(\kappa)}{\mu Q_{d|1}(\kappa) + (1-\mu) Q_{d|0}(\kappa)}
-$$
+$$\lambda(\mu, \kappa) = \frac{\mu Q_{d|1}(\kappa)}{\mu Q_{d|1}(\kappa) + (1-\mu) Q_{d|0}(\kappa)}$$
+
 After a tyest pass ($d = P$), posteriors are given by:
-$$
-\lambda(\mu, \kappa) = \frac{\mu (1 -\tau)}{\mu(1 -\tau) + (1-\mu) (1 - \tau -\kappa)}
-$$
+$$\lambda(\mu, \kappa) = \frac{\mu (1 -\tau)}{\mu(1 -\tau) + (1-\mu) (1 - \tau -\kappa)}$$
 And after a test fail ($d = F$)
-$$
-\lambda(\mu, \kappa) = \frac{\mu \tau}{\mu\tau + (1-\mu) (\tau +\kappa)}
-$$
+$$\lambda(\mu, \kappa) = \frac{\mu \tau}{\mu\tau + (1-\mu) (\tau +\kappa)}$$
+
 ## Coder personal data :octocat:
 
 | Name | Mail UC |
