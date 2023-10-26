@@ -42,11 +42,11 @@ $$\pi(\theta, \mu, \kappa) = V(\theta, \mu, \kappa) - c(\kappa)$$
 
 $$\mu'_\theta = \frac{c'(\kappa) - \frac{\partial V(\theta, \mu, \kappa)}{\partial\kappa}}{\frac{\partial V(\theta, \mu, \kappa)}{\partial\mu}}$$
 
-Let $\~{\mu}(\kappa)$ be the solution to the equation $\mu'_L = \mu'_H$. The main objective is the proof to:
+Let $\tilde{\mu}(\kappa)$ be the solution to the equation $\mu'_L = \mu'_H$. The main objective is the proof to:
 
 | Lemma 4.         |
 |:---------------------------|
-| If $c(\kappa) = c\kappa$, with $c\leq20$, then the function $\~{\mu}(\kappa)$ is decreasing in $\kappa$. |
+| If $c(\kappa) = c\kappa$, with $c\leq20$, then the function $\tilde{\mu}(\kappa)$ is decreasing in $\kappa$. |
 
 ## Coder personal data :octocat:
 
@@ -98,15 +98,32 @@ As you can see, I have chosen $a$ to save the non-positive values and $b$ the po
 | I      | Number of equations to be solved ($\mu$ and $\kappa$ grid size)           |    :no_entry_sign:                       |
 
 ### Output
-The file "Regular_intercept.csv" is the main output, it has all the possible combinations of parameters and their respective interception $\mu$ and $\kappa$. Moreover, it is included two additional dummy variables:
 
-| H_bigger_Int | Intercept |
-| :-: | :-: |
-| 1 if and only if h is bigger than Intercept_Mu | 1 if and only if there is interception |
+The file "Regular_case.csv" has columns 1-4 that report the parameters under which $\tilde{\mu}$ is computed (note that L and H do not change since they do not affect $\tilde{\mu}$). Column "Decreasing" reports 0 when there exists a non-decreasing zone, otherwise, it reports 1.
 
-There are two auxiliar outputs which filter "Regular_intercept.csv" by "L" ("Stat_L.csv") or "C"("Stat_C.csv") to study comparative statics.
+| L   | H   | C   | Tau  | Decreasing |
+|-----|-----|-----|------|------------|
+| 0   | 0.8 | 2   | 0.05 | 1          |
+| 0   | 0.8 | 2   | 0.15 | 1          |
+| 0   | 0.8 | 2   | 0.25 | 1          |
+| ... | ... | ... | ...  | ...        |
 
-## Check_intercept.m
+> **Proof to Lemma 4**
+```Regular_case.csv``` represents the proof to lemma 4, any additional output was used by the authors to study the scenario and deliver different answers.
+
+
+The file "Regular_intercept.csv" has all the possible combinations of parameters and their respective interception of $\tilde{\mu}$ and indifference curve of the low type, $\mu$ and $\kappa$. Moreover, it is included two additional dummy variables:
+
+| L   | H   | C   | Tau  | hat_mu | hat_kappa | Intercept |
+|-----|-----|-----|------|--------|-----------|-----------|
+| 0   | 0.8 | 2   | 0.05 | 0.827  | 0.342     | 1         |
+| 0   | 0.8 | 2   | 0.15 | 0.783  | 0.345     | 1         |
+| 0   | 0.8 | 2   | 0.25 | 0.766  | 0.346     | 1         |
+| ... | ... | ... | ...  | ...    | ...       | ...       |
+
+There are two auxiliar outputs which filter "Regular_intercept.csv" by "L" ("Stat_L.csv") or "C"("Stat_C.csv") to study comparative statics (Those are calculated with python).
+
+## Comparative_stats.m
 ### Inputs
 This file has no inputs, the only relevant inputs are the outputs of "Check_intercept.m".
 ### Outputs
