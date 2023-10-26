@@ -46,6 +46,10 @@ Let $\~{\mu}(\kappa)$ be the solution to the equation $\mu'_L = \mu'_H$. The mai
 
 **_Lemma 4._** If $c(\kappa) = c\kappa$, with $c\leq20$, then the function $\~{\mu}(\kappa)$ is decreasing in $\kappa$.
 
+| Lemma 4.         |
+|:---------------------------|
+| If $c(\kappa) = c\kappa$, with $c\leq20$, then the function $\~{\mu}(\kappa)$ is decreasing in $\kappa$. |
+
 ## Coder personal data :octocat:
 
 | Name | Mail UC |
