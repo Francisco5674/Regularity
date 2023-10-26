@@ -1,6 +1,33 @@
 # Regularity check :school_satchel:
-This repository saves the code which can solve an info design problem based on beliefs. In order to do so, the main tool is a new bisection algorithm that is capable of solving multiple equations simultaneously. 
 
+### Figueroa, N., & Guadalupi, C. (2023). Signaling through tests. The Quarterly Review of Economics and Finance, 92, 25-34.
+
+This repository saves the code which can solve an single crossing problem based on beliefs. In order to do so, the main tool is a new bisection algorithm that is capable of solving multiple equations simultaneously. 
+
+I am going to copy a relevant extract of the paper just to give the context I need to explain my code.
+
+## The model
+
+A firm (sender) sells a product of initially unknown quality, which can be either good ($v = 1$) or bad ($v = 0$). The firm is privately informed about his type $\theta \in \{H,L\}$, the probability of producing a good-quality product, i.e. $\theta = \mathbb{P}(v = 1)$, with $0 \leq L \leq H \leq 1$. Therefore, a high-type firm is more likely to produce good-quality products, but cannot be sure about it. We assume that quality is exogenous and marginal costs of production are zero for both types.
+
+The firm might subject the product to a public test before launch. Tests return a binary result $d \in \{ P, F \}$, where $P$ is a pass and $F$ is a fail. Let denote by $Q_{d|v}$ the probability of result $d$ given quality $v$. Passing a test is good news about product quality, so that $Q_{P|1}− Q_{P|0} = Q_{F|0} − Q_{F|1} \geq 0$. Following Gill and Sgroi (2012), we define test toughness and expertise as follows. Test toughness is defined as the probability that a good-quality product fails the test: $\tau ∶= Q_{F|1} = 1 − Q_{P|1} > 0$, which we assume exogenous. On the other hand, we allow the firm to choose test expertise $ \kappa ∶= Q_{P|1} − Q_{P|0} = Q_{F|0} − Q_{F|1} \in [0, 1 − \tau]$ at a cost $c(\kappa)$, increasing and type-independent.
+
+The market (receiver) observes the firm’s choice of test expertise and result. It forms beliefs about product quality accordingly, and pays a price equal to the expected product quality.
+
+#### Beliefs and payoffs
+
+We denote by $z ∶= \mathbb{P}(\theta = H)$ beliefs about firm’s type being high and $\mu ∶= \mathbb{P}(v = 1) = zH + (1 − z) L$ beliefs about product quality being good. Prior beliefs are given by $z_0 \in [0, 1]$ and $\mu_0 \in [L, H]$, respectively. After observing expertise $\kappa$, the market forms interim beliefs $z(\kappa) ∶= \mathbb{P}(\theta = H|\kappa)$ and $\mu(\kappa) = \mathbb{P} (v = 1|\kappa) = z(\kappa)H + (1 − z(\kappa))L$. From now on we write interim beliefs $\mu(\kappa)$ as $\mu$ to save notation. Given $\mu$, posteriors are calculated via Bayes rule after observing the result $d$:
+$$
+\lambda(\mu, \kappa) = \frac{\mu Q_{d|1}(\kappa)}{\mu Q_{d|1}(\kappa) + (1-\mu) Q_{d|0}(\kappa)}
+$$
+After a tyest pass ($d = P$), posteriors are given by:
+$$
+\lambda(\mu, \kappa) = \frac{\mu (1 -\tau)}{\mu(1 -\tau) + (1-\mu) (1 - \tau -\kappa)}
+$$
+And after a test fail ($d = F$)
+$$
+\lambda(\mu, \kappa) = \frac{\mu \tau}{\mu\tau + (1-\mu) (\tau +\kappa)}
+$$
 ## Coder personal data :octocat:
 
 | Name | Mail UC |
