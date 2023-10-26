@@ -57,7 +57,7 @@ Let $\tilde{\mu}(\kappa)$ be the solution to the equation $\mu'_L = \mu'_H$. The
 ## Execution :computer:
 There are two relevant files to run.
 
-|"Check_intercept.m"|"Comparative_stats.m"|
+|```Check_intercept.m```|```Comparative_stats.m```|
 | :-: | :-: |
 | This check if the $\mu$ which marks the difference between the Indiference curve (IC) slope of high type and the low type is decreasing in $\kappa$. This file looks for the intercept of the line found in "Check_decreasing.m" and the IC of the low type. | The main objective of this script is to build the vectors of $\mu$ founded in "Check_intercept.m" as a function of "C" or "L". |
 
