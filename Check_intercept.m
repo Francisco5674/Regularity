@@ -25,8 +25,8 @@ Tau = linspace(0.05,0.95,ntau);
 % "Regular_decreasing.csv".
 %%
 writematrix(["L","H","C","Tau","hat_mu", "hat_kappa",...
-    "Intercept"],"Regular_intercept.csv")
-writematrix(["L","H","C","Tau","Decreasing"],"Regular_case.csv")
+    "Intercept"],"Outputs\Regular_intercept.csv")
+writematrix(["L","H","C","Tau","Decreasing"],"Outputs\Regular_case.csv")
 
 countern = 0;
 total = nl*nc*ntau;
@@ -42,11 +42,11 @@ for l = L
 
                     if prod(not(diff(Line_D)>0)) == 0
                         info = [l,h,c,tau,0];
-                        writematrix(info,'Regular_case.csv', ...
+                        writematrix(info,'Outputs\Regular_case.csv', ...
                             'WriteMode','append')
                     else
                         info = [l,h,c,tau,1];
-                        writematrix(info,'Regular_case.csv', ...
+                        writematrix(info,'Outputs\Regular_case.csv', ...
                             'WriteMode','append')
                     end
                    
@@ -69,7 +69,7 @@ for l = L
                             info = [l,h,c,tau,".",".",0];
                         end
                         % write in the csv
-                        writematrix(info,'Regular_intercept.csv', ...
+                        writematrix(info,'Outputs\Regular_intercept.csv', ...
                                     'WriteMode','append')
                     end
                     
@@ -84,5 +84,5 @@ end
 
 % This creates the files in python for the comparative statics.
 % Writes hat_mu as a function of C or L.
-pyrunfile("Comparative_C.py") % hat_mu(C) 
-pyrunfile("Comparative_L.py") % hat_mu(L)
+pyrunfile("Auxiliar functions python\Comparative_C.py") % hat_mu(C) 
+pyrunfile("Auxiliar functions python\Comparative_L.py") % hat_mu(L)

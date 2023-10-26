@@ -1,6 +1,16 @@
 %% Example
 
-tau_ex=0.95;
+clear
+clc
+% This section sets several parameters, this part must be executed before 
+% run the next part which solves the general problem
+I = 1001;
+% "I" represents the number of equation the user wants to solve
+% simultaneously, the user can ignore the rest variables.
+a = zeros(1,I - 1);
+b = ones(1,I - 1);
+tau_ex=0.2;
+
 c_ex=2;
 h_ex=0.8;
 l_ex=0.7;

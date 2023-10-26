@@ -90,7 +90,7 @@ ylabel('Index in the grid')
 Relevant_share = [];
 Avg_Muintercept = [];
 Var_Muintercept = [];
-Relevant_tolerance = 20;
+Relevant_tolerance = 5;
 
 for cost = C
     points = Ind(Costs == cost);

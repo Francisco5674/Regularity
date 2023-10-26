@@ -3,7 +3,7 @@ import csv
 Record = {}
 Codes = {}
 
-with open("Regular_intercept.csv", 'r', encoding="utf-8") as file:
+with open("Outputs\Regular_intercept.csv", 'r', encoding="utf-8") as file:
   reader = csv.reader(file)
   id = 1
   next(reader)
@@ -16,26 +16,29 @@ with open("Regular_intercept.csv", 'r', encoding="utf-8") as file:
       mu = float(line[4])
     except:
       mu = "."
-    code = [L,H,Tau]
+    code = [H,C,Tau]
     if not (code in Codes.values()):
       Codes[id] = code
-      Record[id] = [[C,mu]]
+      Record[id] = [[L,mu]]
       id += 1
     else:
       key_list = list(Codes.keys())
       val_list = list(Codes.values())
       key = key_list[val_list.index(code)]
-      Record[key].append([C,mu])
+      Record[key].append([L,mu])
 
 for id in Record.keys():
   Record[id] = sorted(Record[id], key = lambda x: x[0])
   print(id)
 
-with open("Auxiliar CSV/Stat_C.csv", mode= "w", encoding= "utf-8") as file:
+with open("Auxiliar CSV/Stat_L.csv", mode= "w", encoding= "utf-8") as file:
   for id in Record.keys():
     muintercept = [i[1] for i in Record[id]]
     parameters = Codes[id]
     data = parameters + muintercept
     data = [str(j) for j in data]
     file.write((",").join(data) + "\n")
+
+
+
 
