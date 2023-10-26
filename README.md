@@ -67,7 +67,7 @@ Solving an equation system to find a function is actually solving the same equat
 
 However, if I use a loop for every possible combination it would be too slow and the process would take a lot of time. So, I created a bisection solving algorithm that is able to solve thousands of cases simultaneously, it is just a slight modification that will save us a lot of time.
 
-``` BSvector.m ```
+```Auxiliar functions\BSvector.m```
 
 The natural way to expand a bisection algorithm would be using the norm of a vector, where each element belongs to a different equation. Then we have two vectors, we can call them $a$ and $b$, which represent the upper and lower bound we have chosen to find our solutions, as vectors, each element represents each upper and lower bound and they could potentially be different. 
 
@@ -75,7 +75,7 @@ Each bound is chosen carefully to use the intermediate value theorem, we take ad
 
 As usual, we have to take the middle point between each element of $a$ and $b$, this would be our first iteration. This new vector, we can call it $m$, is evaluated in the function we are trying to make zero and then we calculate the norm. If the norm is small enough (in this particular case, if it is smaller than $10^{-5}$) the process ends. If the vector is not close to the origin, then the process starts again but now $m$ takes the place of the bound that shares the same sign once evaluated in the function we are trying to solve.
 
-``` updt.m ```
+``` Auxiliar functions\updt.m ```
 
 Abbreviating the word update, this functions is extremely important because it determines which element of each bound vector, $a$ and $b$, must be replaced by the element in $m$. Given $t$ as the iteration stage, it follows the next expression:
 
@@ -84,6 +84,10 @@ $$ a_{t+1} = a_{t} 1_{f(m) > 0} + m 1_{f(m) \leq 0}$$
 $$ b_{t+1} = b_{t} 1_{f(m) \leq 0} + m 1_{f(m) > 0}$$
 
 As you can see, I have chosen $a$ to save the non-positive values and $b$ the positive ones.
+
+```Auxiliar functions\Example```
+
+If you run this code, it builds a figure of the function $\tilde{\mu}$ using my algortihm and a classic loop for 10000 equations. While the loop takes about 1.5 seconds, my program only takes 0.05 seconds to solve the same equations. A reduction of more than 90% of the time.
 
 # Principal Inputs and outputs
 
@@ -128,3 +132,43 @@ There are two auxiliar outputs which filter "Regular_intercept.csv" by "L" ("Sta
 This file has no inputs, the only relevant inputs are the outputs of "Check_intercept.m".
 ### Outputs
 Results in a csv file called "Comp_C.csv" or "Comp_L.csv" with the parameters behind the respective behavior. The last column always reports 0 when there is at least one non increasing zone, otherwise, it reports 1.
+
+
+## All scripts in this program
+
+- Auxiliar CSV :file_folder:
+    - ```Stat_C.csv```: auxiliar csv used to build ```Check_C.csv```
+    - ```Stat_L.csv```: auxiliar csv used to build ```Check_L.csv```
+- Auxiliar functions :file_folder:
+    - ```adjust.m```: It has the same function as ```updt.m``` but it adjusts the initial values.
+    - ```BSvector.m```: already explained
+    - ```cost_upper_bond.m```: exploratory file used to check if it exists some value of C big enough such that any analysis with bigger costs are irrelevant.
+    - ```disc.m```: this function discretizes a vector between 0 and 1.
+    - ```Example.m```: already explained
+    - ```f.m```: it is the equation whose solution determines $\tilde{\mu}$.
+    - ```g.m```: it is the equation whose solution determines $\tilde{\mu}$ when $c(\kappa)$ is quadratic.
+    - ```lic.m```: it is the equation whose solution determines the Low type Indifference Curve (LIC).
+    - ```precheck.m```: it is an auxiliar function useful to find the intercept between $\tilde{\mu}$ and the LIC.
+    - ```R.m```: auxiliar mathematic function.
+    - ```uf.m```: auxiliar mathematic function.
+    - ```ufk.m```: auxiliar mathematic function.
+    - ```ufu.m```: auxiliar mathematic function.
+    - ```up.m```: auxiliar mathematic function.
+    - ```updt.m```: already explained.
+    - ```upk.m```: auxiliar mathematic function.
+    - ```upu.m```: auxiliar mathematic function.
+    - ```vk.m```: auxiliar mathematic function.
+    - ```vu.m```: auxiliar mathematic function.
+- Auxiliar functions python :file_folder:
+    - ```Comparative_C.py```: pyhton file used to create ```Stat_C.csv```.
+    - ```Comparative_L.py```: pyhton file used to create ```Stat_L.csv```.
+- Exploration :file_folder:
+    - ```Wolfram_exploration.nb```: exploratory file used to understand the general problem.
+- Outputs :file_folder:
+    - ```Check_C.csv```: used to study comparative statics.
+    - ```Check_L.csv```: used to study comparative statics.
+    - ```Regular_case.csv```: already explained.
+    - ```Regular_intercept.csv```: already explained.
+- ```Check_intercept.m```: already explained.
+- ```Comparative_stats.m```: already explained.
+- ```Non_linear_example.m```: it shows a solution $\tilde{\mu}$ when $c(\kappa)$ is quadratic.
