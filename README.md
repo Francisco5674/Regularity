@@ -44,8 +44,6 @@ $$\mu'_\theta = \frac{c'(\kappa) - \frac{\partial V(\theta, \mu, \kappa)}{\parti
 
 Let $\~{\mu}(\kappa)$ be the solution to the equation $\mu'_L = \mu'_H$. The main objective is the proof to:
 
-**_Lemma 4._** If $c(\kappa) = c\kappa$, with $c\leq20$, then the function $\~{\mu}(\kappa)$ is decreasing in $\kappa$.
-
 | Lemma 4.         |
 |:---------------------------|
 | If $c(\kappa) = c\kappa$, with $c\leq20$, then the function $\~{\mu}(\kappa)$ is decreasing in $\kappa$. |
