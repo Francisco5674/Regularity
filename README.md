@@ -2,11 +2,11 @@
 
 ### Figueroa, N., & Guadalupi, C. (2023). Signaling through tests. The Quarterly Review of Economics and Finance, 92, 25-34.
 
-This repository saves the code which can solve an single crossing problem based on beliefs. In order to do so, the main tool is a new bisection algorithm that is capable of solving multiple equations simultaneously. 
+This repository saves the code which can solve a single crossing problem based on beliefs. In order to do so, the main tool is a new bisection algorithm that is capable of solving multiple equations simultaneously. 
 
 I am going to copy a relevant extract of the paper just to give the context I need to explain my code.
 
-## The model
+## The model :scroll:
 
 A firm (sender) sells a product of initially unknown quality, which can be either good ($v = 1$) or bad ($v = 0$). The firm is privately informed about his type $\theta \in \{H,L\}$, the probability of producing a good-quality product, i.e. $\theta = \mathbb{P}(v = 1)$, with $0 \leq L \leq H \leq 1$. Therefore, a high-type firm is more likely to produce good-quality products, but cannot be sure about it. We assume that quality is exogenous and marginal costs of production are zero for both types.
 
@@ -55,11 +55,35 @@ Let $\~{\mu}(\kappa)$ be the solution to the equation $\mu'_L = \mu'_H$. The mai
 | {Francisco Fuentes} | {francisco.fuentes@uc.cl} |
 
 ## Execution :computer:
-There are three relevant files to run.
+There are two relevant files to run.
 
 |"Check_intercept.m"|"Comparative_stats.m"|
 | :-: | :-: |
 | This check if the $\mu$ which marks the difference between the Indiference curve (IC) slope of high type and the low type is decreasing in $\kappa$. This file looks for the intercept of the line found in "Check_decreasing.m" and the IC of the low type. | The main objective of this script is to build the vectors of $\mu$ founded in "Check_intercept.m" as a function of "C" or "L". |
+
+## Code Logic description :keyboard:
+
+Solving an equation system to find a function is actually solving the same equation system with a dynamic parameter, in this case I have to find $\mu$ for different values of $\kappa$. Moreover, we have to check this for a big enough set of parameters such as $\tau$, $H$, $L$, and $c$. Of course, I will use a grid system and find the solution to every combination of parameters. 
+
+However, if I use a loop for every possible combination it would be too slow and the process would take a lot of time. So, I created a bisection solving algorithm that is able to solve thousands of cases simultaneously, it is just a slight modification that will save us a lot of time.
+
+``` BSvector.m ```
+
+The natural way to expand a bisection algorithm would be using the norm of a vector, where each element belongs to a different equation. Then we have two vectors, we can call them $a$ and $b$, which represent the upper and lower bound we have chosen to find our solutions, as vectors, each element represents each upper and lower bound and they could potentially be different. 
+
+Each bound is chosen carefully to use the intermediate value theorem, we take adventage of the fact that must be at least one solution to the problem if the function is continous and both bounds evaluated in the function ($f$) have opposite signs.
+
+As usual, we have to take the middle point between each element of $a$ and $b$, this would be our first iteration. This new vector, we can call it $m$, is evaluated in the function we are trying to make zero and then we calculate the norm. If the norm is small enough (in this particular case, if it is smaller than $10^{-5}$) the process ends. If the vector is not close to the origin, then the process starts again but now $m$ takes the place of the bound that shares the same sign once evaluated in the function we are trying to solve.
+
+``` updt.m ```
+
+Abbreviating the word update, this functions is extremely important because it determines which element of each bound vector, $a$ and $b$, must be replaced by the element in $m$. Given $t$ as the iteration stage, it follows the next expression:
+
+$$ a_{t+1} = a_{t} 1_{f(m) > 0} + m 1_{f(m) \leq 0}$$
+
+$$ b_{t+1} = b_{t} 1_{f(m) \leq 0} + m 1_{f(m) > 0}$$
+
+As you can see, I have chosen $a$ to save the non-positive values and $b$ the positive ones.
 
 # Principal Inputs and outputs
 
